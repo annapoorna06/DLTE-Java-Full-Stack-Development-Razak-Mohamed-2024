@@ -3,6 +3,7 @@ package app.mybank.middleware;
 import app.mybank.entity.CreditCard;
 import app.mybank.entity.Merchant;
 import app.mybank.entity.Transaction;
+import app.mybank.exceptions.CreditCardException;
 import app.mybank.exceptions.TransactionException;
 import app.mybank.remotes.TransactionRepository;
 
@@ -175,12 +176,24 @@ public class TransactionFileRepository implements TransactionRepository {
 
     @Override
     public List<Transaction> findAllByDate(Date date) {
-        return null;
+        readFromTransactionFile();
+        List<Transaction> list = (List<Transaction>) transactionList.stream().filter(each->each.getTransactionDate().equals(date)).collect(Collectors.toList());
+        if(list.size()==0) {
+            logger.log(Level.WARNING,date+resourceBundle.getString("card.notExists"));
+            throw new CreditCardException();
+        }
+        return transactionList;
     }
 
     @Override
     public List<Transaction> findAllByMerchant(Integer merchantId) {
-        return null;
+        readFromTransactionFile();
+        List<Transaction> list= (List<Transaction>) transactionList.stream().filter(each->each.getMerchant().equals(merchantId)).collect(Collectors.toList());
+        if(list.size()==0) {
+            logger.log(Level.WARNING,merchantId+resourceBundle.getString("card.notExists"));
+            throw new CreditCardException();
+        }
+        return list;
     }
 
     @Override

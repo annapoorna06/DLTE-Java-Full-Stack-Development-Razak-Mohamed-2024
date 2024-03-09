@@ -5,6 +5,7 @@ import app.mybank.exceptions.TransactionException;
 import app.mybank.middleware.TransactionFileRepository;
 import app.mybank.remotes.TransactionRepository;
 
+import java.util.Date;
 import java.util.List;
 
 public class TransactionService {
@@ -28,5 +29,12 @@ public class TransactionService {
 
     public List<Transaction> callFindAllByCreditCard(Long cardNumber){
         return transactionRepository.findAllByCreditCard(cardNumber);
+    }
+
+    public List<Transaction> findAllByMerchant(Integer merchantId){
+        return transactionRepository.findAllByMerchant(merchantId);
+    }
+    public List<Transaction> findAllByDate(Date date){
+        return transactionRepository.findAllByDate( date);
     }
 }
